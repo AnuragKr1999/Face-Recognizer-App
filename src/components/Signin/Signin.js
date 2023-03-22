@@ -1,85 +1,84 @@
-import React from 'react';
+import React, {useState} from "react";
 
-class Signin extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      signInEmail: '',
-      signInPassword: ''
-    }
+export default function Signin( {onRouteChange, loadUser} ) {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const onEmailChange = (event) => {
+    setEmail(event.target.value)
   }
 
-  onEmailChange = (event) => {
-    this.setState({signInEmail: event.target.value})
+  const onPasswordChange = (event) => {
+    setPassword(event.target.value)
   }
 
-  onPasswordChange = (event) => {
-    this.setState({signInPassword: event.target.value})
-  }
-
-  onSubmitSignIn = () => {
-    fetch('http://localhost:3000/signin', {
+  const onSubmitSignIn = () => {
+    fetch('http://localhost:5000/signin', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        email: this.state.signInEmail,
-        password: this.state.signInPassword
+        email: email,
+        password: password
       })
     })
       .then(response => response.json())
       .then(user => {
         if (user.id) {
-          this.props.loadUser(user)
-          this.props.onRouteChange('home');
+          loadUser(user)
+          onRouteChange('home');
         }
       })
   }
 
-  render() {
-    const { onRouteChange } = this.props;
-    return (
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-        <main className="pa4 black-80">
-          <div className="measure">
-            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-              <legend className="f1 fw6 ph0 mh0">Sign In</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="email"
-                  name="email-address"
-                  id="email-address"
-                  onChange={this.onEmailChange}
-                />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                <input
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={this.onPasswordChange}
-                />
-              </div>
-            </fieldset>
-            <div className="">
-              <input
-                onClick={this.onSubmitSignIn}
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
-                type="submit"
-                value="Sign in"
-              />
-            </div>
-            <div className="lh-copy mt3">
-              <p  onClick={() => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
-            </div>
+  return (
+    <div className="courier-new w-90 black mw6 center relative cover bg-top mt1">
+      <div
+        id="overlay"
+        className="absolute absolute--fill bg-light-purple o-50 z-unset shadow-3"
+      ></div>
+
+      <div className="relative pa4 pa5-m">
+        <h1 className="tracked ma0 mb4 pv3">Sign In</h1>
+          <div className="mb3">
+            <label htmlFor="email" className="db f6 ttu ph2 mb2">
+              Email
+            </label>
+            <input
+              type="text"
+              name="email"
+              id="email"
+              onChange={onEmailChange}
+              className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
+            />
           </div>
-        </main>
-      </article>
-    );
-  }
+          <div className="mb4">
+            <label htmlFor="password" className="db f6 ttu ph2 mb2">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              onChange={onPasswordChange}
+              className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
+            />
+          </div>
+          <div>
+            <button
+                className="input-reset db w-100 f6 b ttu tracked pv3 ph3 pointer bg-hot-pink hover-bg-blue bn br-pill"
+                onClick={onSubmitSignIn}
+                value="signin"
+            >
+              Sign In
+            </button>
+          </div>
+
+        <div className="tc b f6 mt4 o-70 glow pa2 i">
+          New Member? <p className="pointer underline" onClick={() => onRouteChange('register')}>Register</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default Signin;

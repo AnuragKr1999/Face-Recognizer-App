@@ -1,97 +1,97 @@
-import React from 'react';
+import React, {useState} from "react";
 
-class Register extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      name: ''
-    }
+export default function Register({ onRouteChange, loadUser }) {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+
+  const onNameChange = (event) => {
+    setName(event.target.value)
   }
 
-  onNameChange = (event) => {
-    this.setState({name: event.target.value})
+  const onEmailChange = (event) => {
+    setEmail(event.target.value)
   }
 
-  onEmailChange = (event) => {
-    this.setState({email: event.target.value})
+  const onPasswordChange = (event) => {
+    setPassword(event.target.value)
   }
 
-  onPasswordChange = (event) => {
-    this.setState({password: event.target.value})
-  }
-
-  onSubmitSignIn = () => {
-    fetch('http://localhost:3000/register', {
+  const onSubmitRegister = () => {
+    fetch('http://localhost:5000/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
-        name: this.state.name
+        email: email,
+        password: password,
+        name: name
       })
     })
       .then(response => response.json())
       .then(user => {
-        if (user) {
-          this.props.loadUser(user)
-          this.props.onRouteChange('home');
+        if (user.id) {
+          loadUser(user)
+          onRouteChange('home');
         }
-      })
+      }) 
   }
 
-  render() {
-    return (
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-        <main className="pa4 black-80">
-          <div className="measure">
-            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-              <legend className="f1 fw6 ph0 mh0">Register</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
-                <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="text"
-                  name="name"
-                  id="name"
-                  onChange={this.onNameChange}
-                />
-              </div>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                <input
-                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="email"
-                  name="email-address"
-                  id="email-address"
-                  onChange={this.onEmailChange}
-                />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                <input
-                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={this.onPasswordChange}
-                />
-              </div>
-            </fieldset>
-            <div className="">
-              <input
-                onClick={this.onSubmitSignIn}
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
-                type="submit"
-                value="Register"
-              />
-            </div>
+  return (
+    <div className="courier-new w-90 black mw6 center relative cover bg-top mt1">
+      <div
+        id="overlay"
+        className="absolute absolute--fill bg-light-purple o-50 z-unset shadow-3"
+      ></div>
+
+      <div className="relative pa4 pa5-m">
+        <h1 className="tracked ma0 mb4 pv3">Register</h1>
+          <div className="mb3">
+            <label htmlFor="name" className="db f6 ttu ph2 mb2">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              onChange={onNameChange}
+              className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
+            />
           </div>
-        </main>
-      </article>
-    );
-  }
+          <div className="mb3">
+            <label htmlFor="email" className="db f6 ttu ph2 mb2">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              onChange={onEmailChange}
+              className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
+            />
+          </div>
+          <div className="mb4">
+            <label htmlFor="password" className="db f6 ttu ph2 mb2">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              onChange={onPasswordChange}
+              className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
+            />
+          </div>
+          <div>
+            <button
+              className="input-reset db w-100 f6 b ttu tracked pv3 ph3 pointer bg-hot-pink hover-bg-blue bn br-pill"  
+              onClick={onSubmitRegister}
+              value="register"
+            >
+              Register
+            </button>
+          </div>
+        <div className="tc b f6 mt4 o-70 glow pa2 i">
+          Already Member? <p className="pointer underline" onClick={() => onRouteChange('signin')}>Sign In</p>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-export default Register;
