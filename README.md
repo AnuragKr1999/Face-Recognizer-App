@@ -1,9 +1,10 @@
-# SmartBrain - v1
-Final project for ZTM course
+# Face-Recognizer-App
 
 1. Clone this repo
 2. Run `npm install`
 3. Run `npm start`
-4. You must add your own API key in the `src/App.js` file to connect to Clarifai.
+
+Note: Create a .env.local file. Add the line to add your clarifai api key:
+REACT_APP_API_KEY = 'YOUR CLARIFAI API KEY HERE'
 
 You can grab Clarifai API key [here](https://www.clarifai.com/)
